@@ -1,0 +1,13 @@
+General process:
+    - track sound "ray" from source point
+    - find faces that the ray collides with
+    - make new ray that is the reflection of that ray off of the ear face
+        - should have decreased amplitude from sound absorbed by ear flesh
+        - new ray should originate from reflected position of source through the face
+    - claculate sound of each ray hitting the "ear drum"
+        - consider the total distance traveled by a ray including bouncing in the ear
+        - use final amplitude of each ray after all bounces off of ear
+        - use total distance / speed of sound & final amplitude to find the point in sound file and intensity to play it
+    - Add all final ray inputs together
+        - not entirely sure how this would work
+    - Save final generated wave to an output file
