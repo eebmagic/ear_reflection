@@ -8,7 +8,8 @@ def remove_texture(point):
 
 
 # Load file content
-file_path = "/Users/ethanbolton/Desktop/ear_reflection/models/trimmed/trimmed.obj"
+# file_path = "/Users/ethanbolton/Desktop/ear_reflection/models/trimmed/trimmed.obj"
+file_path = "/Users/ethanbolton/Desktop/ear_reflection/models/trimmed/with_drum.obj"
 with open(file_path) as file:
     content = file.read()
     lines = content.split('\n')
@@ -46,5 +47,15 @@ for a in verts:
     y.append(a[1])
     z.append(a[2])
 
-plt.scatter(x, y, s=0.1)
+from mpl_toolkits.mplot3d import Axes3D
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+# Try using this with a newer version of matplotlib?
+# ax.set_aspect('equal')
+
+ax.plot(z, x, y, markersize=1, linestyle='', marker='o')
 plt.show()
+
+# Plot 2d interpretation
+# plt.scatter(x, y, s=0.1)
+# plt.show()

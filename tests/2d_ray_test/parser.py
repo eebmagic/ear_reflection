@@ -31,19 +31,51 @@ def make_sets(verts, faces):
         a -= 1
         b -= 1
         
-        edge = {verts[a], verts[b]}
+        edge = [verts[a], verts[b]]
         out.append(edge)
 
     return out
 
 
+def center(a, b):
+    x = (a[0] + b[0]) / 2
+    y = (a[1] + b[1]) / 2
+    return (x, y)
+
+
+def make_plane(a, b):
+    pass
+
+
 if __name__ == "__main__":
+    # Load data from ear obj
     v, f = get_data("simple_ear.obj")
-    s = make_sets(v, f)
-    print(s)
+    faces = make_sets(v, f)
+    print(faces)
 
+    source = (0.5, 6)
+
+
+
+
+    ### Chart data
+    import matplotlib.pyplot as plt
+    fig = plt.figure()
+    ax = fig.add_subplot()
+
+    # plot ray attempts
+    for face in faces:
+        cent = center(face[0], face[1])
+        plt.plot(*zip(source, cent), linestyle='dashed', color='orange')
+
+    # plot ear faces
     x, y = map(list, zip(*v))
+    plt.plot(x, y, marker='o')
 
-    # import matplotlib.pyplot as plt
-    # plt.plot(x, y)
-    # plt.show()
+    # plot source point
+    plt.plot(*zip(source), marker='o')
+
+    
+
+    plt.show()
+
