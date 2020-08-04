@@ -2,7 +2,7 @@
 def remove_texture(point):
     out = []
     for a in point:
-        out.append(float(a.split('//')[0]))
+        out.append(int(a.split('//')[0]))
 
     return tuple(out)
 

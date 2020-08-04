@@ -9,6 +9,8 @@ General process:
         - consider the total distance traveled by a ray including bouncing in the ear
         - use final amplitude of each ray after all bounces off of ear
         - use total distance / speed of sound & final amplitude to find the point in sound file and intensity to play it
+        - final amplitude:
+            final_amp = original_amp * (damping_const ^ num_of_bounces)
     - Add all final ray inputs together
         - not entirely sure how this would work
     - Save final generated wave to an output file

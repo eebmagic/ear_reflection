@@ -1,0 +1,3 @@
+vertexes    11051
+normals     21787
+faces       21798
