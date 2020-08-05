@@ -1,5 +1,7 @@
 import parser
 from tqdm import tqdm
+import time
+start = time.time()
 
 # Load data
 source_file = "../../models/simplified/simplified_900/simplified_900.obj"
@@ -35,4 +37,6 @@ for face in tqdm(sets):
     cent = parser.face_center(face)
     plt.plot(*zip(source, cent), linestyle='dotted', color='orange', alpha=0.5)
 
+duration = time.time() - start
+print(f"duration: {duration}")
 plt.show()
