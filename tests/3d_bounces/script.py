@@ -1,6 +1,32 @@
 import parser
 from tqdm import tqdm
 import time
+
+def project_to_face(point, face):
+    x1, y1, z1 = point
+    a, b, c, d = plane
+
+    # find point on plane perp to point
+    k =(-a * x1-b * y1-c * z1-d)/float((a * a + b * b + c * c)) 
+    x2 = a * k + x1
+    y2 = b * k + y1
+    z2 = c * k + z1
+
+    mid = (x2, y2, z2)
+    return mid
+
+
+def point_in_face(point, face):
+    x, y, z = map(list, zip(*face))
+    
+    valid_x = point[0] > min(x) and point[0] < min(x)
+    valid_y = point[1] > min(y) and point[1] < min(y)
+    valid_z = point[2] > min(z) and point[2] < min(z)
+
+    return (valid_x and valid_y and valid_z)
+
+
+
 start = time.time()
 
 # Load data
@@ -35,6 +61,7 @@ for face in tqdm(sets):
 print("Drawing lines")
 for face in tqdm(sets):
     cent = parser.face_center(face)
+    # Check that line is not running into a collision with another face
     plt.plot(*zip(source, cent), linestyle='dotted', color='orange', alpha=0.5)
 
 duration = time.time() - start
