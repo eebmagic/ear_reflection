@@ -1,0 +1,3 @@
+547 verts
+900 faces
+1139 normals

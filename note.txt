@@ -3,9 +3,9 @@ General process:
     - find faces that the ray collides with
         - currently most uncertain on how to do this
         Process:
-            - draw line from source to each surface
-            - throw out lines obstructed by other faces
-                - (point on a face is within window of points making that face)
+            - convert 3d data into view-space projection
+            - build z-buffer
+            - use z-buffer to determine visible faces and then reflect off of those
     - make new ray that is the reflection of that ray off of the ear face
         - should have decreased amplitude from sound absorbed by ear flesh
         - new ray should originate from reflected position of source through the face
