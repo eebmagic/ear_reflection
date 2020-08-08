@@ -177,8 +177,6 @@ print(f"new center: {new_center}")
 # print(f"new angle (deg): {math.degrees(new_angle)}")
 
 
-# Project onto 2d plane
-
 
 # Chart faces
 import matplotlib.pyplot as plt
