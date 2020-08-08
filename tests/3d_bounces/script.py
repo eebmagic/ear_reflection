@@ -83,19 +83,20 @@ def xy_angle(point):
 
 def xz_angle(point):
     m = point[2] / point[0]
-    theta = math.atan(m)
+    theta = math.degrees(math.atan(m))
+    if point[0] < 0:
+        theta += 180
 
-    return theta
+    return math.radians(theta)
 
 
 def xy_rotation(vert, angle):
     c, s = math.cos(angle), math.sin(angle)
-    matr = np.array(((c, -s), (s, c)))
-    v = np.array((vert[0], vert[1]))
+    matr = np.array(((c, s, 0), (-s, c, 0), (0, 0, 1)))
+    v = np.array(vert)
     
     out = np.matmul(matr, v)
     out = out.tolist()
-    out.append(vert[2])
     return out
 
 
@@ -107,18 +108,31 @@ def xy_rotate_all(verts, angle):
     return out
 
 
+def xz_rotation(vert, angle):
+    c, s = math.cos(angle), math.sin(angle)
+    matr = np.array(((c, 0, s), (-s, 0, c), (0, 1, 0)))
+    v = np.array(vert)
+
+    out = np.matmul(matr, v)
+    out = out.tolist()
+    return out
+
+
+def xz_rotate_all(verts, angle):
+    out = []
+    for vert in verts:
+        new = xz_rotation(vert, angle)
+        out.append(new)
+
+    return out
+
+
+
 start = time.time()
 
 # Load data
 source_file = "../../models/simplified/simplified_900/simplified_900.obj"
 verts, faces = parser.get_data(source_file)
-og_verts = verts[:]
-og_sets = parser.make_sets(verts, faces)
-center = center_of_mass(verts)
-
-# print(verts[:10])
-# print(faces[:10])
-# print(sets[:10])
 print(len(verts), len(faces))
 
 
@@ -127,21 +141,41 @@ source = (30, 30, 50)
 
 # Translate all points to make source origin
 verts = translate_all(verts, invert(source))
+# Save original locations before rotation
+og_verts = verts[:]
+og_sets = parser.make_sets(verts, faces)
 
 # Rotate on xy plane to center model
+print("XY ROTATION")
 center = center_of_mass(verts)
 angle = xy_angle(center)
-print(center)
-print(angle, math.degrees(angle))
+print(f"old center: {center}")
+# print(f"old angle (rad): {angle}")
+# print(f"old angle (deg): {round(math.degrees(angle), 2)}")
 
-verts = xy_rotate_all(verts, math.degrees(angle))
-center = center_of_mass(verts)
-angle = xy_angle(center)
-print(center)
-print(angle, math.degrees(angle))
+verts = xy_rotate_all(verts, angle)
+new_center = center_of_mass(verts)
+new_angle = xy_angle(new_center)
+print(f"new center: {new_center}")
+# print(f"new angle (rad): {new_angle}")
+# print(f"new angle (deg): {round(math.degrees(angle), 2)}")
 
 
 # Rotate on yz plane to center model
+print("\nXZ ROTATION")
+center = center_of_mass(verts)
+angle = xz_angle(center)
+print(f"old center: {center}")
+# print(f"old angle (rad): {angle}")
+# print(f"old angle (deg): {math.degrees(angle)}")
+
+verts = xz_rotate_all(verts, angle)
+new_center = center_of_mass(verts)
+new_angle = xz_angle(new_center)
+print(f"new center: {new_center}")
+# print(f"new angle (rad): {new_angle}")
+# print(f"new angle (deg): {math.degrees(new_angle)}")
+
 
 # Project onto 2d plane
 
@@ -152,7 +186,7 @@ from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-# Chart vertexes
+# Chart vertexes (original: red, new: blue)
 sets = parser.make_sets(verts, faces)
 print("Charting faces")
 for face in tqdm(sets):
@@ -163,12 +197,17 @@ for face in tqdm(og_sets):
     x, y, z = map(list, zip(*face))
     ax.plot(x, y, z, color='r', marker='o', markersize=1, linestyle='dashed', linewidth=0.3)
 
-# # Chart lines to centers
-# print("Drawing lines")
-# for face in tqdm(sets):
-#     cent = parser.face_center(face)
-#     # Check that line is not running into a collision with another face
-#     plt.plot(*zip(source, cent), linestyle='dotted', color='orange', alpha=0.5)
+ax.scatter(0, 0, 0, color='orange', marker='o')
+
+# plot corners
+edge = 100
+ax.scatter(edge, 0, 0, color='orange', marker='o')
+ax.scatter(-edge, 0, 0, color='orange', marker='o')
+ax.scatter(0, edge, 0, color='orange', marker='o')
+ax.scatter(0, -edge, 0, color='orange', marker='o')
+ax.scatter(0, 0, edge, color='orange', marker='o')
+ax.scatter(0, 0, -edge, color='orange', marker='o')
+
 
 duration = time.time() - start
 print(f"duration: {duration}")
